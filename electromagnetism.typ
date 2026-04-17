@@ -201,6 +201,10 @@ Total amount of charge is saved.
 
 - *Semiconductor* - ?????? quite difficult... 中間ってなんだよ
 
+\
+
+- *indcuction*
+
 #align(center,box(width:15cm, height:4cm, clip:true)[
   #place(horizon)[
     #cetz.canvas({
@@ -228,7 +232,7 @@ Total amount of charge is saved.
   ]
 ])
 
-=== Dielectric Polarization
+- *Dielectric Polarization*
 
 #align(center,box(width:15cm, height:4cm, clip:true)[
   #place(horizon)[
@@ -238,17 +242,42 @@ Total amount of charge is saved.
       rect((-7.5,-1),(-0.5,1),stroke:(paint: black, thickness:1pt))
       rect((0.5,-1),(4,1),stroke:(paint: black, thickness:1pt))
 
-      ellipse((1,0.5),width:0.4cm, height:0.3cm)
       content((-1,-0.5), $+$)
       content((-1,-0), $+$)
       content((-1,+0.5), $+$)
+
+      circle((1.2,0.5 ),radius:(0.5,0.2))
+      circle((1.2,0   ),radius:(0.5,0.2))
+      circle((1.2,-0.5),radius:(0.5,0.2))
       content((1.4,-0.5), $+$)
       content((1.4,-0), $+$)
       content((1.4,+0.5), $+$)
       content((1.0,-0.5), $-$)
       content((1.0,-0), $-$)
       content((1.0,+0.5), $-$)
-      content((2.5,-1.6), "nonconductor")
+
+      circle((2.2,0.5 ),radius:(0.5,0.2))
+      circle((2.2,0   ),radius:(0.5,0.2))
+      circle((2.2,-0.5),radius:(0.5,0.2))
+      content((2.4,-0.5), $+$)
+      content((2.4,-0), $+$)
+      content((2.4,+0.5), $+$)
+      content((2.0,-0.5), $-$)
+      content((2.0,-0), $-$)
+      content((2.0,+0.5), $-$)
+
+      circle((3.2,0.5 ),radius:(0.5,0.2))
+      circle((3.2,0   ),radius:(0.5,0.2))
+      circle((3.2,-0.5),radius:(0.5,0.2))
+      content((3.4,-0.5), $+$)
+      content((3.4,-0), $+$)
+      content((3.4,+0.5), $+$)
+      content((3.0,-0.5), $-$)
+      content((3.0,-0), $-$)
+      content((3.0,+0.5), $-$)
+
+      content((2.2,-1.6), "nonconductor")
+
     })
   ]
 ])
