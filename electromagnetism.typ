@@ -276,6 +276,13 @@ Total amount of charge is saved.
       content((3.0,-0), $-$)
       content((3.0,+0.5), $-$)
 
+      line((0.9,-0.5),(0.9 - 1,-0.5), mark:(end:"stealth", fill:black))
+      line((1.5,-0.5),(1.5 + 0.7,-0.5), mark:(end:"stealth", fill:black))
+      line((0.9,0),(0.9 - 1,0), mark:(end:"stealth", fill:black))
+      line((1.5,0),(1.5 + 0.7,0), mark:(end:"stealth", fill:black))
+      line((0.9,0.5),(0.9 - 1,0.5), mark:(end:"stealth", fill:black))
+      line((1.5,0.5),(1.5 + 0.7,0.5), mark:(end:"stealth", fill:black))
+
       content((2.2,-1.6), "nonconductor")
 
     })
@@ -284,45 +291,150 @@ Total amount of charge is saved.
 
 == Electric Field
 
-#align(center,box(width:15cm, height:4cm, clip:true)[
-  #place(horizon)[
+\
+
+#align(center,box(width:15cm, height:6cm, clip:true)[
+  #place(center + horizon)[
     #cetz.canvas({
       import cetz.draw: *
+      rect((-10,-10),(10,10))
 
 
-      //square(fill: gradient.radial(..color.map.rainbow))
-      circle((-1,0),radius:0.2)
-      content((-1,-0.7), "charge "+$q_1 unit("C")$)
+      let charge_pos = (0,0)
+      circle(charge_pos,radius:0.3)
+      content((0,0.05), $-$)
+      content((-1.8,-0.2), "charge "+$q_1 unit("C")$)
 
-      line((2,0),(4,0), mark:(end:"stealth", fill:gray), stroke:(paint:gray,thickness:0.1))
-      content((4,-0.6), "electric field "+$bold(E(r)) unit("N/C")$)
-      /*
+      line((2,0.2),(4,0.2), mark:(end:"stealth", fill:gray), stroke:(paint:gray,thickness:0.1))
+      content((4,-0.2), "electric field "+$bold(E(r)) unit("N/C")$)
+    
+
       let fieldvec(p,q) = {
         let (x1,y1) = p
         let (x2,y2) = q
         let x3 = x1 - x2
-        let y3 = y1 - y2)
+        let y3 = y1 - y2
 
-        let r = sqrt(x3*x3 + y3*y3)
-        let f = 2.0 / (x3*x3 + y3*y3)
+        let f = 0
+        let r = 1
+        if x3 == 0 and y3 == 0{
 
-        line((2,0),(4,0), mark:(end:"stealth", fill:gray), stroke:(paint:gray,thickness:0.1))
+        }else{
+          r = calc.sqrt(x3*x3 + y3*y3)
+          f = 2 / (x3*x3 + y3*y3)
+        }
+
+        line(q,(x2 + x3*f/r,y2 + y3*f/r), mark:(end:"stealth", fill:black), stroke:(paint:black,thickness:0.01))
       }
-      */
+      for i in range(-6,6){
+        for j in range(-8,8){
+          if calc.abs(i) <= 1 or calc.abs(j) <= 1{
+          }else{
+            fieldvec(charge_pos,(i/2,j/2))
+          }
+        }
+      }
+      //fieldvec(charge_pos,(0,0))
     })
   ]
 ])
+Electric field is vector field.\
+If there are multiple charges, the electric field is equals to sum of each electric fields made by these charges.
 
-== Electric line of force 電気力線
+== Electric line of force
 
-(it was difficult to draw figure...)
+#figure(
+align(center,box(width:10cm, height:8cm, clip:true)[
+  #place(center + horizon)[
+    #cetz.canvas({
+      import cetz.draw: *
 
-- *the direction of tangent of line is the same as the direction of the field.*
+      let q1 = +1
+      let q2 = -1
+      let d = 4
+      let k = 0.9
+
+      rect((-100 + d/2 ,-100),(100 + d/2,100))
+
+      circle((0,0),radius:0.2)
+      content((-0.4,-0.9), str(q1))
+      circle((d,0),radius:0.2)
+      content((d+0.6,-0.9), str(q2))
+
+      let drawel(angl) = {
+        let x = 0.1 * calc.cos(angl)
+        let y = 0.1 * calc.sin(angl)
+        let end = false
+        let flag1 = true
+        let i = 0
+        while not end{
+          let r1 = calc.sqrt(x*x + y*y)
+          let x_p = x - d 
+          let y_p = y 
+          let r2 = calc.sqrt(x_p*x_p + y_p*y_p)
+          let r1_3 = calc.pow(r1,3)
+          let r2_3 = calc.pow(r2,3)
+          let fx = k * (q1 * x / r1_3 + q2 * x_p / r2_3)
+          let fy = k * (q1 * y / r1_3 + q2 * y_p / r2_3)
+          if r1 <= 0.5 or r2 <= 0.5{
+            let ff = calc.sqrt(fx*fx + fy*fy)
+            if 1 <= ff {
+              let k_p = 1/ff
+              fx = k_p * fx
+              fy = k_p * fy
+            }
+          }
+          //let fx = x_p / r2
+          //let fy = y_p / r2
+
+          if flag1 and d/3 <= r1  {
+            line((x,y),(x + fx, y + fy), mark:(end:">", fill:black), stroke:(thickness:0.1))
+            flag1 = false
+          }else{
+            //line((x,y),(x + fx, y + fy), mark:(end:">", fill:black))
+            line((x,y),(x + fx, y + fy))
+          }
+          if x <= -5 or 5 <= x{
+            end = true
+          }
+          if y <= -4 or 4 <= y{
+            end = true
+          }
+          if x <= d and d <= x+fx and y <= 0 and 0 <= y+fy{
+            end = true
+          }
+          if r2 <= 1{
+            end = true
+          }
+          if 1000 < i{
+            end = true
+          }
+          x += fx
+          y += fy
+          i += 1
+        }
+      }
+      drawel(0)
+      drawel(calc.pi * 1 / 4)
+      drawel(calc.pi * 2 / 4)
+      drawel(calc.pi * 3 / 4)
+      drawel(calc.pi * 4 / 4)
+      drawel(calc.pi * 5 / 4)
+      drawel(calc.pi * 6 / 4)
+      drawel(calc.pi * 7 / 4)
+    })
+  ]
+])
+  ,caption: [simulator]
+)
+(it was difficult to draw the figure...)
+
+- *the direction of tangent of line is the same as the direction of the field.* 
 - *the line appears with plus charge and disappear with minus charge.*
-- *$E$ line drawn per $1 unit("m^2")$ , as strength of electric field is $E unit("E/C")$.*
+- *$E$ line drawn per $1 unit("m^2")$ , as strength of electric field is $E unit("N/C")$.*
 
 #align(center,box(width:8cm, height:8cm, clip:true)[
-  #place(horizon)[
+  #place(center + horizon)[
     #cetz.canvas({
       import cetz.draw: *
 
@@ -342,13 +454,11 @@ Total amount of charge is saved.
   ]
 ])
 
-
+Let $N$ number of lines, $E$ strength of electric field.
 $
   N = E dot 4 pi r^2
 $
 
-Mr.Ide "why integrated value equals to $S$?"\
-Me ( Oh.... Does it requires $ε$-$δ$-difinition of limit...? )
 
 
 
