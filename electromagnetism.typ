@@ -352,20 +352,21 @@ align(center,box(width:10cm, height:8cm, clip:true)[
       let q1 = +1
       let q2 = -1
       let d = 4
-      let k = 0.9
+      let k = 0.6
 
       rect((-100 + d/2 ,-100),(100 + d/2,100))
 
       circle((0,0),radius:0.2)
-      content((-0.4,-0.9), str(q1))
+      content((-0.4,-0.9), str(q1)+" C")
       circle((d,0),radius:0.2)
-      content((d+0.6,-0.9), str(q2))
+      content((d+0.6,-0.9), str(q2)+" C")
 
       let drawel(angl) = {
         let x = 0.1 * calc.cos(angl)
         let y = 0.1 * calc.sin(angl)
         let end = false
         let flag1 = true
+        let flag2 = true
         let i = 0
         while not end{
           let r1 = calc.sqrt(x*x + y*y)
@@ -386,28 +387,29 @@ align(center,box(width:10cm, height:8cm, clip:true)[
           }
           //let fx = x_p / r2
           //let fy = y_p / r2
-
-          if flag1 and d/3 <= r1  {
-            line((x,y),(x + fx, y + fy), mark:(end:">", fill:black), stroke:(thickness:0.1))
-            flag1 = false
-          }else{
-            //line((x,y),(x + fx, y + fy), mark:(end:">", fill:black))
-            line((x,y),(x + fx, y + fy))
-          }
           if x <= -5 or 5 <= x{
             end = true
-          }
-          if y <= -4 or 4 <= y{
+          }else if y <= -4 or 4 <= y{
             end = true
-          }
-          if x <= d and d <= x+fx and y <= 0 and 0 <= y+fy{
+          }else if (x <= d and d <= x+fx) or (y <= 0 and 0 <= y+fy){
+            fx = x_p * 0.1 / r2
+            fy = y_p * 0.1 / r2
+
+            line((x,y),(d + fx, 0 + fy))
             end = true
-          }
-          if r2 <= 1{
+          }else if 1000 < i{
             end = true
-          }
-          if 1000 < i{
-            end = true
+          }else{
+
+            if flag1 and d/2 <= r1  {
+              line((x,y),(x + fx, y + fy), mark:(end:">", fill:black), stroke:(thickness:0.05))
+              flag1 = false
+            }else if flag2 and d/2 >= r2{
+              line((x,y),(x + fx, y + fy), mark:(end:">", fill:black), stroke:(thickness:0.05))
+              flag2 = false
+            }else{
+              line((x,y),(x + fx, y + fy))
+            }
           }
           x += fx
           y += fy
