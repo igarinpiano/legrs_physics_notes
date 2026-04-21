@@ -289,6 +289,8 @@ Total amount of charge is saved.
   ]
 ])
 
+#pagebreak()
+
 == Electric Field
 
 \
@@ -338,8 +340,17 @@ Total amount of charge is saved.
     })
   ]
 ])
+
 Electric field is vector field.\
+Let $1 unit("C")$ charge a test charge at position $bold(r)$,
+$bold(E(r))$ is the electric force which the test charge receive.
+$
+  bold(E(r)) = k Q bold(r)/abs(bold(r))^3
+$
+
 If there are multiple charges, the electric field is equals to sum of each electric fields made by these charges.
+
+#pagebreak()
 
 == Electric line of force
 
@@ -361,9 +372,10 @@ align(center,box(width:10cm, height:8cm, clip:true)[
       circle((d,0),radius:0.2)
       content((d+0.6,-0.9), str(q2)+" C")
 
-      let drawel(angl) = {
-        let x = 0.1 * calc.cos(angl)
-        let y = 0.1 * calc.sin(angl)
+      let drawel(p,angl,doreverse) = {
+        let (x,y) = p
+        x += 0.1 * calc.cos(angl)
+        y += 0.1 * calc.sin(angl)
         let end = false
         let flag1 = true
         let flag2 = true
@@ -379,15 +391,19 @@ align(center,box(width:10cm, height:8cm, clip:true)[
           let fy = k * (q1 * y / r1_3 + q2 * y_p / r2_3)
           if r1 <= 0.5 or r2 <= 0.5{
             let ff = calc.sqrt(fx*fx + fy*fy)
-            if 1 <= ff {
-              let k_p = 1/ff
+            if 0.7 <= ff {
+              let k_p = 0.7/ff
               fx = k_p * fx
               fy = k_p * fy
             }
           }
+          if doreverse{
+            fx = -fx
+            fy = -fy
+          }
           //let fx = x_p / r2
           //let fy = y_p / r2
-          if x <= -5 or 5 <= x{
+          if x <= d/2 - 5 or d/2 + 5 <= x{
             end = true
           }else if y <= -4 or 4 <= y{
             end = true
@@ -401,14 +417,27 @@ align(center,box(width:10cm, height:8cm, clip:true)[
             end = true
           }else{
 
-            if flag1 and d/2 <= r1  {
-              line((x,y),(x + fx, y + fy), mark:(end:">", fill:black), stroke:(thickness:0.05))
-              flag1 = false
-            }else if flag2 and d/2 >= r2{
-              line((x,y),(x + fx, y + fy), mark:(end:">", fill:black), stroke:(thickness:0.05))
-              flag2 = false
+            if doreverse{
+              if flag1 and d/2 <= r2  {
+                line((x,y),(x + fx, y + fy), mark:(end:"<", fill:black), stroke:(thickness:0.05))
+                flag1 = false
+              }else if flag2 and d/2 >= r1{
+                line((x,y),(x + fx, y + fy), mark:(end:"<", fill:black), stroke:(thickness:0.05))
+                flag2 = false
+              }else{
+                line((x,y),(x + fx, y + fy))
+              }
             }else{
-              line((x,y),(x + fx, y + fy))
+
+              if flag1 and d/2 <= r1  {
+                line((x,y),(x + fx, y + fy), mark:(end:">", fill:black), stroke:(thickness:0.05))
+                flag1 = false
+              }else if flag2 and d/2 >= r2{
+                line((x,y),(x + fx, y + fy), mark:(end:">", fill:black), stroke:(thickness:0.05))
+                flag2 = false
+              }else{
+                line((x,y),(x + fx, y + fy))
+              }
             }
           }
           x += fx
@@ -416,14 +445,19 @@ align(center,box(width:10cm, height:8cm, clip:true)[
           i += 1
         }
       }
-      drawel(0)
-      drawel(calc.pi * 1 / 4)
-      drawel(calc.pi * 2 / 4)
-      drawel(calc.pi * 3 / 4)
-      drawel(calc.pi * 4 / 4)
-      drawel(calc.pi * 5 / 4)
-      drawel(calc.pi * 6 / 4)
-      drawel(calc.pi * 7 / 4)
+      drawel((0,0),0, false)
+      drawel((0,0),calc.pi * 1 / 4, false)
+      drawel((0,0),calc.pi * 2 / 4, false)
+      drawel((0,0),calc.pi * 3 / 4, false)
+      drawel((0,0),calc.pi * 4 / 4, false)
+      drawel((0,0),calc.pi * 5 / 4, false)
+      drawel((0,0),calc.pi * 6 / 4, false)
+      drawel((0,0),calc.pi * 7 / 4, false)
+      drawel((d,0),calc.pi * 1 / 4, true)
+      drawel((d,0),calc.pi * 2 / 4, true)
+      drawel((d,0),calc.pi * 6 / 4, true)
+      drawel((d,0),calc.pi * 7 / 4, true)
+      drawel((d,0),calc.pi * 8 / 4, true)
     })
   ]
 ])
@@ -431,18 +465,18 @@ align(center,box(width:10cm, height:8cm, clip:true)[
 )
 (it was difficult to draw the figure...)
 
-- *the direction of tangent of line is the same as the direction of the field.* 
+- *the direction of tangent of line is the same as the direction of the field's vector.* 
 - *the line appears with plus charge and disappear with minus charge.*
-- *$E$ line drawn per $1 unit("m^2")$ , as strength of electric field is $E unit("N/C")$.*
+- *$E$ lines drawn per $1 unit("m^2")$ , as strength of electric field is $E unit("N/C")$.*
 
-#align(center,box(width:8cm, height:8cm, clip:true)[
+#align(center,box(width:8cm, height:6cm, clip:true)[
   #place(center + horizon)[
     #cetz.canvas({
       import cetz.draw: *
 
 
-      let l = 4
-      let r = 2
+      let l = 3
+      let r = 1.5
       line((0,0,0),(l,0,0), mark: (end: ">", fill:black), name: "x")
       line((0,0,0),(0,l,0), mark: (end: ">", fill:black), name: "y")
       line((0,0,0),(0,0,l), mark: (end: ">", fill:black), name: "z")
@@ -456,15 +490,66 @@ align(center,box(width:10cm, height:8cm, clip:true)[
   ]
 ])
 
-Let $N$ number of lines, $E$ strength of electric field.
+Let $N$ number of lines,$Q$ amount of charge.\
+$N = E dot 4 pi r^2 =  k Q/r^2 dot 4 pi r^2$\
+Thus,
 $
-  N = E dot 4 pi r^2
+  N = 4 pi k Q
 $
 
+#pagebreak()
+
+== Electric Potential
+\
+Let $U$ potential energy of charge which have $q$, $V$ electric potential,
+$
+  V := U / q
+$
+#align(center,box(width:15cm, height:2cm, clip:true)[
+  #place(center + horizon)[
+    #cetz.canvas({
+      import cetz.draw: *
+
+      rect((-1,-0.5),(1,0.5))
+      rect((1,0.25),(1.15,-0.25))
+      content((0,0), text(size:10pt)[BATTERY])
+
+      content((1.6,-0.4), $V_("A")$)
+      content((-1.5,-0.4), $V_("B")$)
+    })
+  ]
+])
+$V_("AB") = V_A - V_B $  (base is $B$)\
+$V_("AB")$ is also called *voltage*.
+
+
+#align(center,box(width:15cm, height:4cm, clip:true)[
+  #place(center + horizon)[
+    #cetz.canvas({
+      import cetz.draw: *
+
+      circle((0,2),radius:0.3)
+      content((0,2.05), "+")
+      content((0.7,2), $q$)
+      line((0,2),(0,0), mark:(end:">", fill:black))
+      content((3.4,1), "electric force (let constant)")
+      line((-1,-1),(1,-1))
+      content((3,-1), "base of potential")
+    })
+  ]
+])
 
 
 
-
+/*
+#align(center,box(width:15cm, height:6cm, clip:true)[
+  #place(center + horizon)[
+    #cetz.canvas({
+      import cetz.draw: *
+    })
+  ]
+])
+*/
 
 /*
 
